@@ -9,6 +9,26 @@ export function isValidFen(fen) {
   }
 }
 
+export function parseInputToFen(input) {
+  if (!input || typeof input !== "string") return null;
+  const trimmed = input.trim();
+  
+  // Try loading as FEN
+  try {
+    const chess = new Chess(trimmed);
+    return chess.fen();
+  } catch {
+    // Not a valid FEN, try loading as PGN
+    try {
+      const chess = new Chess();
+      chess.loadPgn(trimmed);
+      return chess.fen();
+    } catch {
+      return null;
+    }
+  }
+}
+
 export function evalToText(cp, mate) {
   if (mate !== null && mate !== undefined) {
     return mate > 0 ? `M${mate}` : `M${mate}`;

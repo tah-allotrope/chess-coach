@@ -57,7 +57,11 @@ export default function App() {
       <div className="max-w-6xl mx-auto space-y-6">
         <h1 className="text-2xl font-bold">Chess Coach</h1>
 
-        <InputBar onAnalyze={handleAnalyze} disabled={isAnalyzing} />
+        <InputBar 
+          onAnalyze={handleAnalyze} 
+          onFenChange={(f) => setFen(f ?? STARTING_FEN)}
+          disabled={isAnalyzing} 
+        />
 
         {error && (
           <div className="bg-red-900/50 border border-red-700 text-red-300 px-4 py-2 rounded-lg text-sm">
