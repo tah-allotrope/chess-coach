@@ -31,7 +31,7 @@ export function parseInputToFen(input) {
 
 export function evalToText(cp, mate) {
   if (mate !== null && mate !== undefined) {
-    return mate > 0 ? `M${mate}` : `M${mate}`;
+    return mate > 0 ? `+M${mate}` : `-M${Math.abs(mate)}`;
   }
   const sign = cp >= 0 ? "+" : "";
   return `${sign}${(cp / 100).toFixed(2)}`;

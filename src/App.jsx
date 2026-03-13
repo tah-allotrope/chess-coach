@@ -47,6 +47,7 @@ export default function App() {
             coachHint={coachHint}
             isAnalyzing={isAnalyzing}
             isLoadingHint={isLoadingHint}
+            fen={fen}
           />
         </div>
       </div>

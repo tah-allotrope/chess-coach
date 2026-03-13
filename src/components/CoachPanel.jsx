@@ -14,7 +14,10 @@ export default function CoachPanel({
   coachHint,
   isAnalyzing,
   isLoadingHint,
+  fen,
 }) {
+  const sideToMove = fen?.split(" ")[1] === "w" ? "White" : "Black";
+
   return (
     <div className="flex flex-col gap-4 flex-1 min-w-[300px] max-h-[400px] overflow-y-auto">
       {/* Engine Analysis */}
@@ -22,6 +25,7 @@ export default function CoachPanel({
         <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">
           Engine Analysis
         </h2>
+        <div className="text-xs text-gray-500 mb-3">{sideToMove} to move</div>
         {isAnalyzing ? (
           <Spinner />
         ) : analysis ? (
