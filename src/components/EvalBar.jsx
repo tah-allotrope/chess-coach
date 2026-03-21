@@ -1,32 +1,32 @@
 import { evalToPercent, evalToText } from "../utils/chess";
 
-export default function EvalBar({ evaluation, mate, height = 560 }) {
-  const whitePercent = evalToPercent(evaluation ?? 0);
+export default function EvalBar({ evaluation, mate, height = null }) {
+  const hasAnalysis = evaluation !== null && evaluation !== undefined;
+  const hasMate = mate !== null && mate !== undefined;
+  const whitePercent = hasAnalysis ? evalToPercent(evaluation) : 50;
+  const label = hasAnalysis || hasMate ? evalToText(evaluation ?? 0, mate) : "--";
 
   return (
     <div
-      className="relative w-8 rounded overflow-hidden border border-gray-700 flex-shrink-0"
-      style={{ height }}
+      className="relative h-full min-h-0 w-10 rounded-2xl overflow-hidden border border-slate-700 bg-slate-900 flex-shrink-0"
+      style={height ? { height } : undefined}
     >
-      {/* Black portion (top) */}
       <div
-        className="absolute top-0 left-0 w-full bg-gray-800 transition-all duration-500"
+        className="absolute top-0 left-0 w-full bg-slate-800 transition-all duration-500"
         style={{ height: `${100 - whitePercent}%` }}
       />
-      {/* White portion (bottom) */}
       <div
-        className="absolute bottom-0 left-0 w-full bg-gray-100 transition-all duration-500"
+        className="absolute bottom-0 left-0 w-full bg-slate-100 transition-all duration-500"
         style={{ height: `${whitePercent}%` }}
       />
-      {/* Eval text */}
       <div className="absolute inset-0 flex items-center justify-center">
         <span
           className={`text-xs font-bold writing-mode-vertical ${
-            whitePercent > 50 ? "text-gray-800" : "text-gray-100"
+            whitePercent > 50 ? "text-slate-900" : "text-slate-100"
           }`}
           style={{ writingMode: "vertical-rl", textOrientation: "mixed" }}
         >
-          {evalToText(evaluation ?? 0, mate)}
+          {label}
         </span>
       </div>
     </div>

@@ -1,7 +1,7 @@
 export class StockfishEngine {
-  constructor() {
+  constructor({ multiPv = 3 } = {}) {
     this.worker = null;
-    this.listeners = [];
+    this.multiPv = multiPv;
   }
 
   _onMessage(callback) {
@@ -26,12 +26,21 @@ export class StockfishEngine {
   }
 
   async init() {
+    if (this.worker) {
+      return;
+    }
+
     this.worker = new Worker("/stockfish/stockfish.js");
     this._send("uci");
     await this._waitFor("uciok");
-    this._send("setoption name MultiPV value 3");
+    this._send(`setoption name MultiPV value ${this.multiPv}`);
     this._send("isready");
     await this._waitFor("readyok");
+  }
+
+  async getBestMove(fen, depth = 8) {
+    const result = await this.analyze(fen, depth);
+    return result.bestMove;
   }
 
   async analyze(fen, depth = 20) {

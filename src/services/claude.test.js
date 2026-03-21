@@ -132,4 +132,31 @@ describe("getCoachingHint prompt perspective", () => {
     expect(userMessage).toContain("Mate in 3");
     expect(userMessage).toContain("Line 1 (eval mate in 3)");
   });
+
+  it("uses the selected player color when it differs from side to move", async () => {
+    const fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    const analysis = {
+      bestMove: "e2e4",
+      evaluation: 30,
+      mate: null,
+      lines: [
+        {
+          depth: 20,
+          multipv: 1,
+          score: 30,
+          mate: null,
+          pv: "e2e4 e7e5",
+        },
+      ],
+    };
+
+    await getCoachingHint(fen, analysis, "b");
+
+    const request = createMock.mock.calls[0][0];
+    const userMessage = request.messages[0].content;
+    expect(userMessage).toContain("Player color: Black");
+    expect(userMessage).toContain("Player to move: White");
+    expect(userMessage).toContain("-0.30 pawns");
+    expect(userMessage).toContain("Line 1 (eval -0.30)");
+  });
 });
