@@ -17,15 +17,13 @@
 - Added new UI components `src/components/GameControls.jsx` and `src/components/PgnPanel.jsx`.
 - Extended `src/engine/stockfish.js` with configurable `MultiPV` and a lightweight `getBestMove()` helper for bot play.
 - Verified the implementation with `npm test` and `npm run build`.
+- Removed the unused legacy `src/components/InputBar.jsx` component from the old paste-first workflow.
+- Re-ran `npm test` and `npm run build` after the cleanup; both still pass.
+- Performed browser verification for the live flow, including starting as White, starting as Black, bot first move as Black, live PGN updates, and `Analyze` on the current position.
 
 ## Outstanding
 
-- Manual browser verification is still worth doing for the live drag-and-drop flow, especially:
-  - starting as White
-  - starting as Black and waiting for the bot's first move
-  - confirming the PGN updates after each move
-  - confirming `Analyze` runs on the current position only
-- `src/components/InputBar.jsx` appears to be leftover from the old workflow and is currently unused.
+- One manual browser check is still worth doing directly in the app: analyze a position, make another legal move, and confirm the prior engine/coaching output clears immediately for the new board state.
 - No commit has been created yet.
 - No difficulty selector, takeback flow, clocks, or persistence has been added.
 
@@ -34,3 +32,4 @@
 - The bot uses a separate Stockfish worker instance from the analysis flow to avoid command collisions.
 - Analysis is reset whenever the board position changes so stale engine output is not shown for a new position.
 - Engine displays remain White-perspective, while coaching is phrased for the chosen player color.
+- Browser automation confirmed the live move loop and current-position analysis, but the stale-analysis-after-next-move check was not cleanly re-verified through Playwright because later drag interactions became unreliable on the rendered board.
