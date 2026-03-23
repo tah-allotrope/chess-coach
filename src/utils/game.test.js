@@ -3,7 +3,10 @@ import { Chess } from "chess.js";
 import {
   applyPlayerMove,
   applyUciMove,
+  createSavedGameData,
   getGameStatus,
+  parseImportedGame,
+  restoreSavedGameData,
   shouldBotMove,
   snapshotGame,
 } from "./game";
@@ -21,6 +24,54 @@ describe("snapshotGame", () => {
       turn: "w",
       lastMove: "e5",
     });
+  });
+});
+
+describe("saved game persistence", () => {
+  it("serializes the current game to a resumable payload", () => {
+    const chess = new Chess();
+    chess.move("e4");
+    chess.move("c5");
+
+    expect(createSavedGameData(chess, "b", "2026-03-23T12:00:00.000Z")).toEqual({
+      playerColor: "b",
+      pgn: "1. e4 c5",
+      savedAt: "2026-03-23T12:00:00.000Z",
+    });
+  });
+
+  it("restores a saved payload back into a live chess position", () => {
+    const restored = restoreSavedGameData({
+      playerColor: "b",
+      pgn: "1. e4 c5 2. Nf3 d6",
+      savedAt: "2026-03-23T12:00:00.000Z",
+    });
+
+    expect(restored.playerColor).toBe("b");
+    expect(restored.savedAt).toBe("2026-03-23T12:00:00.000Z");
+    expect(restored.chess.fen()).toBe(
+      "rnbqkbnr/pp2pppp/3p4/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 3"
+    );
+  });
+});
+
+describe("parseImportedGame", () => {
+  it("loads a pasted PGN into a read-only coaching snapshot", () => {
+    const imported = parseImportedGame("1. d4 Nf6 2. c4 e6 3. Nc3 Bb4", "w");
+
+    expect(imported).toMatchObject({
+      pgn: "1. d4 Nf6 2. c4 e6 3. Nc3 Bb4",
+      moveCount: 6,
+      turn: "w",
+      boardOrientation: "white",
+      lastMove: "Bb4",
+    });
+  });
+
+  it("rejects empty PGN input", () => {
+    expect(() => parseImportedGame("   ", "w")).toThrow(
+      "Paste a PGN from lichess to load a game."
+    );
   });
 });
 

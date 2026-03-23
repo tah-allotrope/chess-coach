@@ -21,8 +21,12 @@ export default function GameControls({
   lastMove,
   isBotThinking,
   isAnalyzing,
+  hasSavedGame = false,
+  lastSavedAt = null,
   onStartNewGame,
   onAnalyze,
+  onSaveGame,
+  onLoadSavedGame,
 }) {
   const analyzeLabel = isAnalyzing
     ? "Analyzing..."
@@ -65,10 +69,30 @@ export default function GameControls({
             >
               {analyzeLabel}
             </button>
+            <button
+              type="button"
+              onClick={onSaveGame}
+              className="rounded-full border border-amber-500/40 bg-amber-500/15 px-4 py-2 text-sm font-medium text-amber-100 transition-colors hover:bg-amber-500/25"
+            >
+              Save Game
+            </button>
+            <button
+              type="button"
+              onClick={onLoadSavedGame}
+              disabled={!hasSavedGame}
+              className="rounded-full border border-violet-500/40 bg-violet-500/15 px-4 py-2 text-sm font-medium text-violet-100 transition-colors hover:bg-violet-500/25 disabled:cursor-not-allowed disabled:border-slate-700 disabled:bg-slate-800 disabled:text-slate-500"
+            >
+              Load Saved Game
+            </button>
           </div>
           <p className="text-sm text-slate-400">
             Play directly on the board, let the local engine reply, and analyze only when you want feedback.
           </p>
+          {lastSavedAt && (
+            <p className="text-xs text-slate-500">
+              Resume slot saved at {new Date(lastSavedAt).toLocaleString()}.
+            </p>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-2 text-xs">

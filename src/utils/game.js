@@ -1,3 +1,5 @@
+import { Chess } from "chess.js";
+
 export function colorToLabel(color) {
   return color === "b" ? "Black" : "White";
 }
@@ -176,4 +178,50 @@ export function snapshotGame(chess, playerColor) {
       : null,
     status: getGameStatus(chess),
   };
+}
+
+export function createSavedGameData(
+  chess,
+  playerColor,
+  savedAt = new Date().toISOString()
+) {
+  return {
+    playerColor,
+    pgn: formatMoveList(chess),
+    savedAt,
+  };
+}
+
+function loadChessFromPgn(pgn) {
+  const chess = new Chess();
+
+  if (pgn) {
+    chess.loadPgn(pgn);
+  }
+
+  return chess;
+}
+
+export function restoreSavedGameData(savedGame) {
+  if (!savedGame || typeof savedGame !== "object") {
+    throw new Error("Saved game data is missing.");
+  }
+
+  const playerColor = savedGame.playerColor === "b" ? "b" : "w";
+  const pgn = typeof savedGame.pgn === "string" ? savedGame.pgn.trim() : "";
+
+  return {
+    chess: loadChessFromPgn(pgn),
+    playerColor,
+    savedAt: savedGame.savedAt ?? null,
+  };
+}
+
+export function parseImportedGame(input, playerColor = "w") {
+  if (!input || !input.trim()) {
+    throw new Error("Paste a PGN from lichess to load a game.");
+  }
+
+  const chess = loadChessFromPgn(input.trim());
+  return snapshotGame(chess, playerColor === "b" ? "b" : "w");
 }

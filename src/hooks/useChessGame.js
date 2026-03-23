@@ -4,6 +4,8 @@ import { StockfishEngine } from "../engine/stockfish";
 import {
   applyPlayerMove,
   applyUciMove,
+  createSavedGameData,
+  restoreSavedGameData,
   snapshotGame,
   shouldBotMove,
 } from "../utils/game";
@@ -11,6 +13,37 @@ import {
 const BOT_DEPTH = 6;
 const BOT_MOVE_DELAY_MS = 450;
 const DEFAULT_PLAYER_COLOR = "w";
+const SAVED_GAME_STORAGE_KEY = "chess-coach.saved-game";
+
+function readSavedGameData() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const saved = window.localStorage.getItem(SAVED_GAME_STORAGE_KEY);
+
+  if (!saved) {
+    return null;
+  }
+
+  return JSON.parse(saved);
+}
+
+function getSavedGameMeta() {
+  try {
+    const savedGame = readSavedGameData();
+
+    return {
+      hasSavedGame: Boolean(savedGame),
+      lastSavedAt: savedGame?.savedAt ?? null,
+    };
+  } catch {
+    return {
+      hasSavedGame: false,
+      lastSavedAt: null,
+    };
+  }
+}
 
 export function useChessGame() {
   const chessRef = useRef(new Chess());
@@ -23,6 +56,7 @@ export function useChessGame() {
   );
   const [isBotThinking, setIsBotThinking] = useState(false);
   const [error, setError] = useState("");
+  const [savedGameMeta, setSavedGameMeta] = useState(() => getSavedGameMeta());
 
   const syncGame = useCallback((nextPlayerColor) => {
     setGame(snapshotGame(chessRef.current, nextPlayerColor));
@@ -40,6 +74,58 @@ export function useChessGame() {
     },
     [syncGame]
   );
+
+  const saveGame = useCallback(() => {
+    try {
+      if (typeof window === "undefined") {
+        throw new Error("Local storage is unavailable in this environment.");
+      }
+
+      const savedGame = createSavedGameData(chessRef.current, playerColor);
+      window.localStorage.setItem(
+        SAVED_GAME_STORAGE_KEY,
+        JSON.stringify(savedGame)
+      );
+
+      setSavedGameMeta({
+        hasSavedGame: true,
+        lastSavedAt: savedGame.savedAt,
+      });
+      setError("");
+      return true;
+    } catch (e) {
+      setError("Saving game failed: " + e.message);
+      return false;
+    }
+  }, [playerColor]);
+
+  const loadSavedGame = useCallback(() => {
+    try {
+      const savedGame = readSavedGameData();
+
+      if (!savedGame) {
+        throw new Error("No saved game found.");
+      }
+
+      const restoredGame = restoreSavedGameData(savedGame);
+
+      gameTokenRef.current += 1;
+      chessRef.current = restoredGame.chess;
+      setPlayerColor(restoredGame.playerColor);
+      setGameId((currentGameId) => currentGameId + 1);
+      setIsBotThinking(false);
+      setSavedGameMeta({
+        hasSavedGame: true,
+        lastSavedAt: restoredGame.savedAt,
+      });
+      setError("");
+      syncGame(restoredGame.playerColor);
+      return true;
+    } catch (e) {
+      setError("Loading saved game failed: " + e.message);
+      return false;
+    }
+  }, [syncGame]);
 
   const handlePieceDrop = useCallback(
     (sourceSquare, targetSquare) => {
@@ -138,7 +224,11 @@ export function useChessGame() {
     playerColor,
     isBotThinking,
     error,
+    hasSavedGame: savedGameMeta.hasSavedGame,
+    lastSavedAt: savedGameMeta.lastSavedAt,
     startNewGame,
+    saveGame,
+    loadSavedGame,
     handlePieceDrop,
   };
 }
