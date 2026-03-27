@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chess Coach Progress Report</title>
+    <style>
+      :root {
+        --bg: #07111a;
+        --bg-soft: rgba(10, 23, 35, 0.82);
+        --panel: rgba(17, 34, 48, 0.9);
+        --panel-strong: rgba(24, 45, 62, 0.96);
+        --line: rgba(124, 213, 178, 0.22);
+        --text: #edf5f2;
+        --muted: #9fb3b8;
+        --accent: #7cd5b2;
+        --accent-strong: #c2f36f;
+        --warm: #f5b15f;
+        --danger: #ff8f8f;
+        --shadow: 0 28px 80px rgba(0, 0, 0, 0.35);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", "Avenir Next", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(124, 213, 178, 0.18), transparent 24%),
+          radial-gradient(circle at top right, rgba(194, 243, 111, 0.14), transparent 20%),
+          linear-gradient(180deg, #08121c 0%, #07111a 46%, #050c13 100%);
+      }
+
+      .shell {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 36px 0 56px;
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        padding: 32px;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background:
+          linear-gradient(135deg, rgba(124, 213, 178, 0.14), rgba(245, 177, 95, 0.08)),
+          var(--panel-strong);
+        box-shadow: var(--shadow);
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: auto -8% -36% auto;
+        width: 360px;
+        height: 360px;
+        background: radial-gradient(circle, rgba(194, 243, 111, 0.16), transparent 65%);
+        pointer-events: none;
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        font-size: 12px;
+        color: var(--accent);
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      .hero-grid {
+        display: grid;
+        gap: 24px;
+        grid-template-columns: minmax(0, 1.6fr) minmax(260px, 0.8fr);
+      }
+
+      .hero h1 {
+        max-width: 12ch;
+        font-size: clamp(2.4rem, 5vw, 4.5rem);
+        line-height: 0.95;
+        letter-spacing: -0.05em;
+      }
+
+      .hero-copy {
+        margin-top: 14px;
+        max-width: 60ch;
+        line-height: 1.65;
+        color: var(--muted);
+      }
+
+      .hero-stats {
+        display: grid;
+        gap: 12px;
+      }
+
+      .stat {
+        padding: 18px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(7, 17, 26, 0.48);
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 2rem;
+        color: var(--accent-strong);
+      }
+
+      .stat span {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted);
+      }
+
+      .section {
+        margin-top: 24px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 20px;
+      }
+
+      .grid.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .card {
+        padding: 24px;
+        border-radius: 24px;
+        border: 1px solid rgba(124, 213, 178, 0.16);
+        background: var(--bg-soft);
+        box-shadow: var(--shadow);
+      }
+
+      .card h2,
+      .card h3 {
+        margin-bottom: 10px;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: var(--accent);
+      }
+
+      .kicker::before {
+        content: "";
+        width: 24px;
+        height: 1px;
+        background: currentColor;
+      }
+
+      ul {
+        margin: 14px 0 0;
+        padding-left: 18px;
+      }
+
+      li + li {
+        margin-top: 10px;
+      }
+
+      .timeline {
+        display: grid;
+        gap: 16px;
+      }
+
+      .timeline-item {
+        position: relative;
+        padding: 20px 20px 20px 24px;
+        border-radius: 22px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0));
+      }
+
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        top: 20px;
+        left: 0;
+        bottom: 20px;
+        width: 4px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, var(--accent), rgba(194, 243, 111, 0.18));
+      }
+
+      .date {
+        color: var(--warm);
+        font-size: 13px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .title-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 8px 0 10px;
+      }
+
+      .commit {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .meter {
+        margin-top: 18px;
+      }
+
+      .meter-label {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .bar {
+        overflow: hidden;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .bar > span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+      }
+
+      .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .pill {
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(124, 213, 178, 0.1);
+        border: 1px solid rgba(124, 213, 178, 0.16);
+        color: #d8f4ea;
+        font-size: 14px;
+      }
+
+      .pill.warn {
+        color: #ffe2b8;
+        background: rgba(245, 177, 95, 0.1);
+        border-color: rgba(245, 177, 95, 0.18);
+      }
+
+      .pill.danger {
+        color: #ffd0d0;
+        background: rgba(255, 143, 143, 0.1);
+        border-color: rgba(255, 143, 143, 0.18);
+      }
+
+      .footer {
+        margin-top: 20px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 980px) {
+        .hero-grid,
+        .grid.two,
+        .grid.three {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          padding: 24px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .shell {
+          width: min(100% - 20px, 1180px);
+          padding-top: 20px;
+        }
+
+        .card,
+        .timeline-item {
+          padding: 18px;
+        }
+
+        .title-row {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">Chess Coach Progress Report</p>
+        <div class="hero-grid">
+          <div>
+            <h1>Three focused days of product movement.</h1>
+            <p class="hero-copy">
+              The app moved from a paste-first analysis tool toward a live chess experience with local play,
+              browser-local resume support, and a separate lichess coaching mode for PGN-based review.
+            </p>
+            <div class="pill-row">
+              <span class="pill">Live in-app play loop</span>
+              <span class="pill">On-demand coaching</span>
+              <span class="pill">Local save and restore</span>
+              <span class="pill">Imported PGN coach mode</span>
+            </div>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat">
+              <strong>3</strong>
+              <span>implementation days represented in this report</span>
+            </div>
+            <div class="stat">
+              <strong>9+</strong>
+              <span>core app files updated across hooks, components, services, and engine support</span>
+            </div>
+            <div class="stat">
+              <strong>2</strong>
+              <span>verification passes already recorded: <code>npm test</code> and <code>npm run build</code></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section grid two">
+        <article class="card">
+          <p class="kicker">Delivered</p>
+          <h2>What changed</h2>
+          <ul>
+            <li>The board now supports live in-app play against a lightweight local bot instead of a paste-first-only workflow.</li>
+            <li>Analysis is triggered on demand for the current position and resets when the board state changes.</li>
+            <li>PGN stays visible during play and can also be loaded through a dedicated lichess coaching flow.</li>
+            <li>A browser-local save slot restores an in-progress game from PGN plus player metadata.</li>
+            <li>Utility and service tests were extended to cover saved-game serialization and imported PGN parsing.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <p class="kicker">Status</p>
+          <h2>Current snapshot</h2>
+          <div class="meter">
+            <div class="meter-label">
+              <span>Feature delivery</span>
+              <span>90%</span>
+            </div>
+            <div class="bar"><span style="width: 90%"></span></div>
+          </div>
+          <div class="meter">
+            <div class="meter-label">
+              <span>Automated verification</span>
+              <span>100%</span>
+            </div>
+            <div class="bar"><span style="width: 100%"></span></div>
+          </div>
+          <div class="meter">
+            <div class="meter-label">
+              <span>Manual browser verification</span>
+              <span>85%</span>
+            </div>
+            <div class="bar"><span style="width: 85%"></span></div>
+          </div>
+          <div class="pill-row">
+            <span class="pill warn">One stale-analysis manual check remains</span>
+            <span class="pill danger">No commit created for this branch yet</span>
+          </div>
+        </article>
+      </section>
+
+      <section class="section card">
+        <p class="kicker">Timeline</p>
+        <h2>Past days at a glance</h2>
+        <p class="muted">
+          This report is based on the current branch notes and recent git history.
+        </p>
+
+        <div class="timeline" style="margin-top: 20px">
+          <article class="timeline-item">
+            <div class="date">Mar 21, 2026</div>
+            <div class="title-row">
+              <h3>First live-play feature pass landed</h3>
+              <div class="commit">Commit: <code>ff7193e</code></div>
+            </div>
+            <p class="muted">
+              The app shifted from pasted-position analysis into a playable in-app board with a dedicated game hook,
+              current-position analysis, board orientation control, bot replies, and live PGN updates.
+            </p>
+            <ul>
+              <li><code>src/hooks/useChessGame.js</code> became the owner of live board state and turn flow.</li>
+              <li><code>src/hooks/useChessAnalysis.js</code> stopped controlling the board and moved to on-demand analysis.</li>
+              <li><code>src/App.jsx</code>, <code>src/components/Board.jsx</code>, and new controls panels reshaped the main UX.</li>
+            </ul>
+          </article>
+
+          <article class="timeline-item">
+            <div class="date">Mar 22, 2026</div>
+            <div class="title-row">
+              <h3>Legacy cleanup and branch context refresh</h3>
+              <div class="commit">Commit: <code>74b4e2a</code></div>
+            </div>
+            <p class="muted">
+              The old paste-first input component was removed so the codebase matched the new live-play architecture,
+              and the branch context was updated after verification passed again.
+            </p>
+            <ul>
+              <li><code>src/components/InputBar.jsx</code> was removed as dead UI from the pre-feature flow.</li>
+              <li>Automated checks were re-run after cleanup and stayed green.</li>
+              <li>The active branch notes were refreshed to track delivered work and remaining manual checks.</li>
+            </ul>
+          </article>
+
+          <article class="timeline-item">
+            <div class="date">Mar 23, 2026</div>
+            <div class="title-row">
+              <h3>Resume slot and lichess coaching mode added</h3>
+              <div class="commit">Commit: <code>ca3a63d</code></div>
+            </div>
+            <p class="muted">
+              A follow-up pass added local persistence for one in-progress game and a second mode that loads pasted PGN
+              into a read-only coaching board for analysis without the local bot loop.
+            </p>
+            <ul>
+              <li><code>src/hooks/useImportedGame.js</code> isolated imported PGN coaching from live play.</li>
+              <li><code>src/utils/game.js</code> and <code>src/utils/game.test.js</code> gained save and parsing coverage.</li>
+              <li><code>src/components/GameControls.jsx</code> and <code>src/components/PgnPanel.jsx</code> exposed save, load, and imported PGN workflows.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section grid three">
+        <article class="card">
+          <p class="kicker">Proof</p>
+          <h3>Verified already</h3>
+          <ul>
+            <li><code>npm test</code> passed after the follow-up feature pass.</li>
+            <li><code>npm run build</code> passed after the live-play and follow-up changes.</li>
+            <li>Browser checks confirmed play as White, play as Black, bot first move as Black, PGN updates, and current-position analysis.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <p class="kicker">Open</p>
+          <h3>Still worth checking</h3>
+          <ul>
+            <li>Analyze a position, make the next legal move, and confirm old engine and coach output clears right away.</li>
+            <li>Create a commit for the branch once the remaining manual check is done.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <p class="kicker">Scope held</p>
+          <h3>Not added in this pass</h3>
+          <ul>
+            <li>Difficulty selector</li>
+            <li>Takeback flow</li>
+            <li>Clocks</li>
+            <li>Multiple save slots</li>
+            <li>Move-by-move imported PGN navigation</li>
+          </ul>
+        </article>
+      </section>
+
+      <p class="footer">Generated for the current feature branch: <code>feature/in-app-play-mode</code></p>
+    </main>
+  </body>
+</html>

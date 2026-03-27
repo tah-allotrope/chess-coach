@@ -33,11 +33,13 @@
 
 ## Current Plan
 
-- Add utility coverage first for browser-local save payloads and imported PGN parsing so the feature lands test-first.
-- Extend the live game hook with simple save/load actions backed by `localStorage` for a single resume slot.
-- Add a top-level mode switch so the app can toggle between live play mode and a read-only PGN coaching mode.
-- Reuse the existing board, PGN, and analysis panels where possible so both modes share the same coaching surface.
-- Verify with `npm test` and `npm run build`, then capture any remaining manual browser checks.
+- [x] Add utility coverage first for browser-local save payloads and imported PGN parsing so the feature lands test-first.
+- [x] Extend the live game hook with simple save/load actions backed by `localStorage` for a single resume slot.
+- [x] Add a top-level mode switch so the app can toggle between live play mode and a read-only PGN coaching mode.
+- [x] Reuse the existing board, PGN, and analysis panels where possible so both modes share the same coaching surface.
+- [x] Verify with `npm test` and `npm run build`, then capture any remaining manual browser checks.
+- [x] Build a standalone HTML progress report for the recent implementation days.
+- [x] Verify the report renders correctly in the browser build output.
 
 ## Working Notes
 
@@ -56,3 +58,4 @@
 - `src/components/GameControls.jsx` exposes `Save Game` and `Load Saved Game`, while `src/components/PgnPanel.jsx` now supports both live and imported PGN copy.
 - `src/utils/game.js` and `src/utils/game.test.js` cover saved-game serialization/restoration and imported-PGN parsing.
 - Verification: `npm test`, `npm run build`.
+- Added a standalone visual progress report at `public/progress-report.html`, and verified it ships to `dist/progress-report.html` after `npm run build`.
