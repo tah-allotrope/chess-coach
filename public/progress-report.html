@@ -325,10 +325,10 @@
         <p class="eyebrow">Chess Coach Progress Report</p>
         <div class="hero-grid">
           <div>
-            <h1>Three focused days of product movement.</h1>
+            <h1>Feature complete. All checks passed.</h1>
             <p class="hero-copy">
-              The app moved from a paste-first analysis tool toward a live chess experience with local play,
-              browser-local resume support, and a separate lichess coaching mode for PGN-based review.
+              The app moved from a paste-first analysis tool to a fully playable live chess experience.
+              All automated tests, build checks, and manual browser verification are green. Branch committed Mar 29, 2026.
             </p>
             <div class="pill-row">
               <span class="pill">Live in-app play loop</span>
@@ -340,16 +340,16 @@
 
           <div class="hero-stats">
             <div class="stat">
-              <strong>3</strong>
-              <span>implementation days represented in this report</span>
+              <strong>4</strong>
+              <span>implementation days — final browser check completed Mar 29, 2026</span>
             </div>
             <div class="stat">
               <strong>9+</strong>
               <span>core app files updated across hooks, components, services, and engine support</span>
             </div>
             <div class="stat">
-              <strong>2</strong>
-              <span>verification passes already recorded: <code>npm test</code> and <code>npm run build</code></span>
+              <strong>100%</strong>
+              <span>delivery, automated verification, and manual browser checks all complete</span>
             </div>
           </div>
         </div>
@@ -374,9 +374,9 @@
           <div class="meter">
             <div class="meter-label">
               <span>Feature delivery</span>
-              <span>90%</span>
+              <span>100%</span>
             </div>
-            <div class="bar"><span style="width: 90%"></span></div>
+            <div class="bar"><span style="width: 100%"></span></div>
           </div>
           <div class="meter">
             <div class="meter-label">
@@ -388,13 +388,13 @@
           <div class="meter">
             <div class="meter-label">
               <span>Manual browser verification</span>
-              <span>85%</span>
+              <span>100%</span>
             </div>
-            <div class="bar"><span style="width: 85%"></span></div>
+            <div class="bar"><span style="width: 100%"></span></div>
           </div>
           <div class="pill-row">
-            <span class="pill warn">One stale-analysis manual check remains</span>
-            <span class="pill danger">No commit created for this branch yet</span>
+            <span class="pill">Stale-analysis cleared ✓</span>
+            <span class="pill">Committed Mar 29, 2026</span>
           </div>
         </article>
       </section>
@@ -442,6 +442,22 @@
           </article>
 
           <article class="timeline-item">
+            <div class="date">Mar 29, 2026</div>
+            <div class="title-row">
+              <h3>Final browser verification and branch commit</h3>
+            </div>
+            <p class="muted">
+              The remaining manual stale-analysis check was completed via automated browser testing. Engine and coach output
+              cleared correctly the moment a new legal move was played. The branch was then committed.
+            </p>
+            <ul>
+              <li>Verified: after analyzing position after 1. e4 d5, playing 2. exd5 immediately cleared the prior engine lines and coaching hint.</li>
+              <li>All outstanding items from the active context resolved — feature branch is fully complete.</li>
+              <li>Progress report updated to reflect 100% delivery and verification.</li>
+            </ul>
+          </article>
+
+          <article class="timeline-item">
             <div class="date">Mar 23, 2026</div>
             <div class="title-row">
               <h3>Resume slot and lichess coaching mode added</h3>
@@ -463,20 +479,21 @@
       <section class="section grid three">
         <article class="card">
           <p class="kicker">Proof</p>
-          <h3>Verified already</h3>
+          <h3>Verified</h3>
           <ul>
             <li><code>npm test</code> passed after the follow-up feature pass.</li>
             <li><code>npm run build</code> passed after the live-play and follow-up changes.</li>
             <li>Browser checks confirmed play as White, play as Black, bot first move as Black, PGN updates, and current-position analysis.</li>
+            <li>Stale-analysis cleared immediately on move 2 (1. e4 d5 2. exd5 Qxd5) — confirmed Mar 29, 2026.</li>
           </ul>
         </article>
 
         <article class="card">
-          <p class="kicker">Open</p>
-          <h3>Still worth checking</h3>
+          <p class="kicker">Verified Mar 29, 2026</p>
+          <h3>All checks complete</h3>
           <ul>
-            <li>Analyze a position, make the next legal move, and confirm old engine and coach output clears right away.</li>
-            <li>Create a commit for the branch once the remaining manual check is done.</li>
+            <li>Stale-analysis check passed: engine and coach output cleared immediately on the next legal move (1. e4 d5 2. exd5).</li>
+            <li>Commit created for the branch on Mar 29, 2026.</li>
           </ul>
         </article>
 

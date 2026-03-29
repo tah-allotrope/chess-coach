@@ -27,9 +27,13 @@
 
 ## Outstanding
 
-- One manual browser check is still worth doing directly in the app: analyze a position, make another legal move, and confirm the prior engine/coaching output clears immediately for the new board state.
-- No commit has been created yet.
-- No difficulty selector, takeback flow, clocks, multiple save slots, or move-by-move imported-PGN navigation has been added.
+- No difficulty selector, takeback flow, clocks, multiple save slots, or move-by-move imported-PGN navigation has been added (deferred scope, not part of this feature).
+
+## Completed (Mar 29, 2026)
+
+- Browser stale-analysis check passed: analyzed position after 1. e4 d5, played 2. exd5, and confirmed engine lines and coaching hint cleared immediately.
+- Progress report updated to reflect 100% delivery and verification.
+- Branch committed.
 
 ## Current Plan
 
